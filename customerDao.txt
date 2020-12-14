@@ -1,0 +1,68 @@
+package com.iist.dao;
+
+import com.iist.connection.Connect;
+import com.iist.model.Customer;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CustomerDAO {
+     
+    public boolean addCustomers(List<Customer> customers) throws Exception {
+
+        try {
+
+            Connection con = Connect.DB();
+            String query = "insert into customers values(?,?,?,?,?,?)";
+            PreparedStatement pstmt;
+            con.setAutoCommit(false);
+
+            for (Customer customer : customers) {
+                pstmt = con.prepareStatement(query);
+                pstmt.setInt(1,0);
+                pstmt.setString(2, customer.getFirstName());
+                pstmt.setString(3, customer.getLastName());
+                pstmt.setInt(4, customer.getAge());
+                pstmt.setString(5, customer.getEmailAddress());
+                pstmt.setString(6, customer.getAddress());
+                pstmt.execute();
+            }
+
+            con.setAutoCommit(true);
+            con.close();
+            return true;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public List<Customer> getCustomers() throws Exception {
+
+        try {
+
+            Connection con = Connect.DB();
+            List<Customer> customers = new ArrayList<>();
+            Customer customer;
+            String query = "select * from customers";
+            PreparedStatement pstmt;
+            pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                customer = new Customer();
+                customer.setFirstName(rs.getString(2));
+                customer.setLastName(rs.getString(3));
+                customer.setAge(rs.getInt(4));
+                customer.setEmailAddress(rs.getString(5));
+                customer.setAddress(rs.getString(6));
+                customers.add(customer);
+            }
+            con.close();
+            return customers;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+}
