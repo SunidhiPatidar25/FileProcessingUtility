@@ -1,0 +1,25 @@
+package com.iist.connection;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
+public class Connect {
+          
+      public static Connection DB() {
+        Connection con = null;
+        
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/file_process", "root", "root");
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Database Connection Error.\nPlease restart the system", "Oops..", JOptionPane.PLAIN_MESSAGE);
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+           
+        }
+        return con;
+    }
+}
